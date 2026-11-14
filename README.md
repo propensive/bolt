@@ -44,7 +44,7 @@ registry records what each normally is.
 | `f` | Pyrocosm, and its tools | `f.tel` |
 | `l` | LIRA | `l.tel` |
 | `p` | Proscala | [`p.tel`](p.tel) |
-| `s` | Soundness | `s.tel` |
+| `s` | Soundness | [`s.tel`](s.tel) |
 | `t` | TEL | [`t.tel`](t.tel) |
 | `x` | XEK | [`x.tel`](x.tel) |
 
@@ -132,3 +132,8 @@ implementation of TEL reports under the same codes, and those of the `tel`
 tool. `x.tel` records XEK's: those of the launcher at the start of every XEK
 executable, and those of the `xek` command, whose every call site is recorded
 as a `site`. Both are edited by hand, with the next free number.
+
+`s.tel` records Soundness's: a subdivision for each library, numbered so that
+each follows those it depends on, an error for each numbered error of the
+library, and a variant for each reason the error distinguishes. A library
+added later takes the next free number.
