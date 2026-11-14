@@ -1,0 +1,281 @@
+tel 1.0 propensive.dev/bolt
+
+# Bolt codes of TEL: `subdivision 1` / `error 7` is ↯/t.1.7, which the TEL
+# Specification formerly called E107. Subdivisions 1 to 5 are defined by the
+# specifications in the `tel` repository, and are common to every
+# implementation; subdivision 6 is the `tel` tool's own.
+
+project t tel
+
+  subdivision 1 parsing
+    description  errors in a document's syntax (TEL Specification §19.3)
+    error 1
+      description  BOM present at start of document
+    error 2
+      description  Pragma is not the first non-blank line
+    error 3
+      description  Pragma line extends beyond first 4096 bytes
+    error 4
+      description  Invalid pragma version
+    error 5
+      description  Invalid sigil character
+    error 6
+      description  Line does not begin with the margin
+    error 7
+      description  Odd indentation
+    error 8
+      description  Trailing spaces on ordinary line
+    error 9
+      description  Comment must follow a blank line, another comment, or start of document
+    error 10
+      description  Line indent does not match any open compound's indent (reserved: the canonical parser never raises it)
+    error 11
+      description Over-indentation
+    error 12
+      description  Child of comment, tabulation, or tabulated row
+    error 13
+      description  Source atom already present on this compound
+    error 14
+      description  Literal atom already present on this compound
+    error 15
+      description  Unclosed literal atom
+    error 16
+      description  Tabulated row has wrong indentation
+    error 17
+      description  Hard space does not end at a column boundary
+    error 18
+      description  Column value exceeds maximum width
+    error 19
+      description  Malformed tabulation heading
+    error 20
+      description  Line-ending inconsistency
+    error 21
+      description  Pragma phrase matches no pragma form
+    error 22
+      description  Pragma phrases violate the positional order or multiplicity
+    error 23
+      description  Document is not well-formed UTF-8
+    error 24
+      description  Layer selections are not in the schema's declaration order
+
+  subdivision 2 schema
+    description  errors in a schema (TEL Specification §20.1)
+    error 1
+      description  Duplicate keyword within a Struct
+    error 2
+      description  Select member has empty variants list
+    error 3
+      description  Scalar has non-null default but member is not required
+    error 4
+      description  Two or more Layers share the same name
+    error 5
+      description  Layer Select variant keyword overlaps existing keyword in base Struct
+    error 6
+      description  Layer Field merge requires both base and layer types to be Struct
+    error 7
+      description  Schema.sigil character is not permitted
+    error 8
+      description  Keyword `tel` is reserved and must not be used as a Field or Variant keyword
+    error 9
+      description  Reference does not resolve to a Definition in the schema
+    error 10
+      description  Two or more Definitions share the same name
+    error 11
+      description  `exclude K` names a keyword that does not identify a Select variant in the merged Struct
+    error 12
+      description  `exclude K` would empty a required Select
+    error 13
+      description  Layer attempts to add a variant to an existing Select in a non-subtyping way
+    error 14
+      description  Layer cannot loosen a required member to optional
+    error 15
+      description  Layer cannot loosen an irrepeatable member to repeatable
+    error 16
+      description  Exclude operation appears outside a layer's SelectDefinition body
+    error 17
+      description  Reference/SelectRef kind mismatch (Reference resolved to a SelectDefinition, or SelectRef resolved to a Record/Scalar)
+    error 18
+      description  Layer declares a conflicting encoding for an existing scalar
+    error 19
+      description  Key field's type does not resolve to a Scalar
+    error 20
+      description  Key field must be effectively required and non-repeatable
+    error 21
+      description  More than one key field in a Struct
+    error 22
+      description  Invalid RE2 pattern
+    error 23
+      description  Layer pattern replacement is not contained in the inherited patterns
+    error 24
+      retired
+      description  Formerly: a scalar declares neither `validate` nor `pattern`
+    error 25
+      description  Scalar `width` is not a positive decimal byte count
+    error 26
+      description  Layer declares a conflicting width for an existing scalar, or the width contradicts the encoding's fixed width
+    error 27
+      description  Scalar declares a `width` but no `encoding`
+    error 28
+      description  Field with an index is not repeatable, or its type is neither a Struct nor a Scalar, or a Scalar-typed field's index path is not the root path
+    error 29
+      description  Index path is not a syntactically valid TELP, or is the root path on a non-Scalar field
+    error 30
+      description  Index path does not resolve statically to a non-repeatable Scalar through non-repeatable Field members
+    error 31
+      description  Scalar declares both `width` and `intern`
+
+  subdivision 3 validation
+    description  a document which does not conform to its schema (TEL Specification §21.9)
+    error 1
+      description  Compound's type is not a Struct
+    error 2
+      description  More atoms than assignable member positions
+    error 3
+      description  Atom appears at a member position that is not atom-assignable
+    error 4
+      description  Atom text matches no variant keyword of a Select member
+    error 5
+      description  Atom text does not match a Field member's Flag keyword
+    error 6
+      description  Compound keyword is not recognized for its parent type
+    error 7
+      description  Required member absent and no default available
+    error 8
+      description  Non-repeatable member is filled more than once
+    error 9
+      description  Compound children of the same member are not contiguous
+    error 10
+      description  Scalar value failed validation
+    error 11
+      description  Flag-typed compound has atoms or compound children
+    error 12
+      description  Scalar value rejected by its type's codec encoder
+    error 13
+      description  Scalar type names a codec the codec binding does not provide
+    error 14
+      description  Duplicate key value among keyed children of one parent
+    error 15
+      description  Scalar value does not match a declared pattern
+
+  subdivision 4 bintel
+    description  errors in decoding BinTEL (BinTEL Specification §10)
+    error 1
+      description  magic number absent or invalid
+    error 2
+      description  malformed variable-length integer
+    error 3
+      description  invalid schema signature length
+    error 4
+      description  schema signature does not decode against the library
+    error 5
+      description  keyword index out of range
+    error 6
+      description  scalar value length extends beyond end of input
+    error 7
+      description  scalar value is not valid UTF-8
+    error 8
+      description  framing error: input bytes remain after document root
+    error 9
+      description  end of input reached mid-decode
+    error 10
+      description  Reference type does not resolve to a Definition
+    error 11
+      description  embedded schema body signature mismatch (self-contained mode)
+    error 12
+      description  embedded schema body is not a valid tels document (self-contained mode)
+    error 13
+      description  scalar's declared encoding is not resolved by the codec binding
+    error 14
+      description  encoded scalar's value bytes rejected by the codec decoder
+    error 15
+      description  codec canonicality check failed: re-encoded bytes differ
+    error 16
+      description  declared document length disagrees with the structural extent
+
+  subdivision 5 ratel
+    description  errors in reading RaTEL (RaTEL Specification §14)
+    error 1
+      description  Magic number is not `B1 C4 B5 BB`
+    error 2
+      description  Unsupported version byte
+    error 3
+      description  Reserved header byte or reserved flag bit non-zero
+    error 4
+      description  File shorter than 144 bytes; committed length `< 144`, greater than the file, or not a multiple of 8
+    error 5
+      description  A directory offset or length is not a multiple of 8, an offset is `< 144`, or `offset + length` exceeds the committed length
+    error 6
+      description  Two non-empty sections overlap
+    error 7
+      description  A section or header digest does not match, or the digests section's length is not `192` (flag bit 0 set); or flag bit 0 is clear and the digests section is non-empty
+    error 8
+      description  Schema signature structurally invalid — the ↯/t.4.3 conditions
+    error 9
+      description  Embedded schema body does not decode under `tels` — the ↯/t.4.12 condition
+    error 10
+      description  Recomputed composed signature differs from the carried signature — the ↯/t.4.11 condition
+    error 11
+      description  The schema cannot be laid out: unresolvable `Reference`/`SelectRef` (the ↯/t.4.10 condition), `intern` on a fixed-width scalar, a secondary-index path that does not resolve per §9.1
+    error 12
+      description  Table directory inconsistent with the layout: wrong `rowSize`, unknown `layout` byte, non-zero reserved bytes, misaligned offset, rows exceeding the section
+    error 13
+      description  Table 0 does not have exactly one row
+    error 14
+      description  A ref is not a multiple of 4, or an item's header or body extends beyond its region
+    error 15
+      description  A record index is `≥` its table's count, or a range's `start + count` exceeds it
+    error 16
+      description  A row reached twice during materialisation — aliasing or a cycle
+    error 17
+      description  A select tag is not the keyword index of one of the member's variants
+    error 18
+      description  A text scalar's bytes are not valid UTF-8 — the ↯/t.4.7 condition
+    error 19
+      description  An encoding named by the schema is not resolved by the codec binding — the ↯/t.4.13 condition
+    error 20
+      description  A codec's decoder rejects a value's bytes — the ↯/t.4.14 condition
+    error 21
+      description  OPTIONAL re-encode check found `encode(decode(b)) ≠ b` — the ↯/t.4.15 condition
+    error 22
+      description  *Writer:* a value of a `width w` scalar encodes to other than `w` bytes; the writer refuses. Never a reader condition
+    error 23
+      description  Index directory or entries malformed: unknown kind, entry count differing from `M`, non-zero reserved bytes, offsets non-monotone or beyond the section, an entry that does not parse
+    error 24
+      description  Index entries not in strictly increasing bytewise order
+    error 25
+      description  An index entry disagrees with the rows: host or child out of range, child outside the host's range, recomputed components differ, or the count differs from the children at the site
+    error 26
+      description  Non-zero bytes in an absent member's slot or in padding
+    error 27
+      description  The header's value hash differs from the BLAKE3-256 value hash of the materialised document
+
+  subdivision 6 tool
+    description  the `tel` command and its language server
+    error 1 SchemaUnresolved
+      description  a pragma names a schema which is not in the registry (information)
+    error 2 LayerUnknown
+      description  a pragma selects a layer its schema does not declare
+    error 3 SignatureDisagrees
+      description  a pragma's signature disagrees with the reference or selections beside it
+    error 4 Unresolvable
+      description  the path of a file to validate could not be resolved
+    error 5 Unreadable
+      description  a file to validate could not be read
+    error 6 ServerTerminated
+      description  the language server terminated abnormally
+    error 7 TransportFailed
+      description  the language server's transport failed
+    error 8 UnrecognisedCommand
+      description  the command was not recognised
+    error 9 SchemasUnlistable
+      description  the registry's schemas could not be listed
+    error 10 SchemaNotAdded
+      description  a schema could not be added to the registry
+    error 11 SignatureUncomputable
+      description  a schema's signature could not be computed
+    error 12 SchemaUnknown
+      description  no schema of that name is in the registry
+    error 13 UpgradeNotApplied
+      description  a staged upgrade of the tool was not applied
+    error 14 UpgradeNotStaged
+      description  an upgrade of the tool could not be staged

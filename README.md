@@ -45,10 +45,10 @@ registry records what each normally is.
 | `l` | LIRA | `l.tel` |
 | `p` | Proscala | [`p.tel`](p.tel) |
 | `s` | Soundness | `s.tel` |
-| `t` | TEL | `t.tel` |
-| `x` | XEK | `x.tel` |
+| `t` | TEL | [`t.tel`](t.tel) |
+| `x` | XEK | [`x.tel`](x.tel) |
 
-Only Proscala's codes have been assigned so far.
+Proscala's, TEL's and XEK's codes have been assigned so far.
 
 ### Compound codes
 
@@ -68,8 +68,8 @@ The cause is a code in its own right. Dropping the carrier's part leaves it:
 A cause may itself be a compound, so a Soundness macro that rejects a TEL
 document at compiletime reports `↯/p.2.2/s.87.1/t.1.4`.
 
-(The module numbers in these examples are illustrative: Soundness's and TEL's
-codes are not assigned yet.)
+(The Soundness module numbers in these examples are illustrative: its codes are
+not assigned yet.)
 
 ## The rules
 
@@ -126,3 +126,9 @@ against it, once `tel schema add bolt.tel` has made the schema known.
 
 `p.tel` is maintained by Proscala's `bin/proscala-bolt`, which describes its
 subdivisions and how the compiler's messages are recognised.
+
+`t.tel` records the errors the TEL specifications define, which every
+implementation of TEL reports under the same codes, and those of the `tel`
+tool. `x.tel` records XEK's: those of the launcher at the start of every XEK
+executable, and those of the `xek` command, whose every call site is recorded
+as a `site`. Both are edited by hand, with the next free number.
