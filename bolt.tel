@@ -1,0 +1,115 @@
+tel 1.0 specification.tel/tels:2.1.0
+
+# The schema of a bolt-code registry: the record of what each bolt code, such
+# as `↯/p.1.7` or `↯/s.87.1/t.1.4`, means.
+#
+# A registry lists, for a project, the numbers of a code in the order they
+# are written: `project p` / `subdivision 1` / `error 7` is `↯/p.1.7`, and a
+# `variant` or a `site` beneath the error gives the code its third and fourth
+# numbers.
+#
+# Every level is written the same way: its number, then optionally its name,
+# then optionally `retired`:
+#
+#     error 7 TypeMismatch
+#     error 10 TopLevelImplicitClass retired
+#
+# A number without a name which is retired has `retired` as a child, since
+# an atom after the number is its name.
+
+name bolt
+
+# ---------------------------------------------------------------------------
+# Scalars
+# ---------------------------------------------------------------------------
+
+scalar Letter
+  description
+      The letter by which a project is known in a bolt code.
+  pattern [a-z]
+
+scalar Number
+  description
+      One number of a bolt code: a decimal natural, counted from 1, without leading zeros.
+  pattern [1-9][0-9]*
+
+scalar Name
+  description
+      The name a project knows a subdivision, error, variant or site by, without spaces.
+  pattern [^\s]+
+
+# ---------------------------------------------------------------------------
+# The levels of a code
+# ---------------------------------------------------------------------------
+
+# The fourth number of a code, or the third for an error without variants.
+
+record Site
+  description
+      A place an error is reported from, where the same error is reported from several and it helps to tell them apart.
+  field number Number key
+  field name Name optional
+  field retired Flag optional
+  field description String optional
+  field source String optional
+
+# The third number of a code. An error has variants or sites, not both: a
+# site of an error which has variants belongs to one of them.
+
+record Variant
+  description
+      One of the cases an error distinguishes, such as a reason an operation failed.
+  field number Number key
+  field name Name optional
+  field retired Flag optional
+  field description String optional
+  field source String optional
+  field site Site optional repeatable
+
+# The second number of a code. `template` and `text` are how a project's
+# tools recognise the error where that is not by its name; an error may have
+# several of each (a message which has been reworded, say).
+
+record Error
+  description
+      An error or a warning.
+  field number Number key
+  field name Name optional
+  field retired Flag optional
+  field description String optional
+  field source String optional
+  field template String optional repeatable
+      description
+          The constant parts of the interpolated string which makes the error's message, joined by `{}`.
+  field text String optional repeatable
+      description
+          The text of the error's message, with `{}` for each part which varies.
+  field variant Variant optional repeatable
+  field site Site optional repeatable
+
+# The first number of a code. Subdivisions are numbered so that each comes
+# after those it depends on, as the project stood when each was numbered.
+
+record Subdivision
+  description
+      A part of a project: a module, a tool, or a part of a compiler.
+  field number Number key
+  field name Name optional
+  field retired Flag optional
+  field description String optional
+  field error Error optional repeatable
+
+record Project
+  description
+      A project, and the codes which begin with its letter.
+  field letter Letter key
+  field name Identifier
+  field description String optional
+  field subdivision Subdivision optional repeatable
+
+# ---------------------------------------------------------------------------
+# Registry document root
+# ---------------------------------------------------------------------------
+
+document
+  field project Project repeatable
