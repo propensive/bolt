@@ -1242,3 +1242,10 @@ project s soundness
     error 1 Debugger.Error
       description `DebuggerError`
       source lib/vivisection/src/core/vivisection.Debugger.scala
+
+  subdivision 146 abscission
+    error 1 Shrink.Error
+      description  A classpath cannot be shrunk to the closed world its entry points reach
+      source lib/abscission/src/core/abscission.Shrink.scala
+      variant 1 Unsound
+      variant 2 Failed
