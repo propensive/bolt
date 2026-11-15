@@ -1,0 +1,211 @@
+tel 1.0 propensive.dev/bolt
+
+# Bolt codes of LIRA: `subdivision 1` / `error 8` is ↯/a.1.8, which the LIRA
+# Specification formerly called L108. Subdivision 1 is the validity rules the
+# specifications in the `lira` repository define, common to every
+# implementation; the subdivisions after it are the modules of the `lira`
+# implementation, in the order of their dependencies.
+
+project a lira
+
+  subdivision 1 specification
+    description  validity rules of the LIRA Specification and its companions (LIRA Specification §2)
+    error 1 InvalidManifest
+      description  The manifest does not decode as one BinTEL document conforming to the `lira` schema
+      source  spec/lira.md §5.1
+    error 2 PayloadLength
+      description  The decompressed payload is not exactly its declared length
+      source  spec/lira.md §8.1
+    error 3 InvalidBlobStream
+      description  The blob stream is not well-formed
+      source  spec/lira.md §8.2
+    error 4 MissingBlob
+      description  A referenced blob is absent from the payload
+      source  spec/lira.md §8.2
+    error 5 PayloadHash
+      description  The payload hash is not its declared value
+      source  spec/lira.md §8.4
+    error 6 InvalidTree
+      description  A tree metadata blob is not valid
+      source  spec/lira.md §9.2
+    error 7 OverlayNotMinimal
+      description  An overlay is not minimal
+      source  spec/lira.md §9.3
+    error 8 ApiDivergence
+      description  The sections of a release do not present one API
+      source  spec/lira.md §9.6
+    error 9 LineageMismatch
+      description  The last lineage entry is not the release's own snapshot
+      source  spec/lira.md §12.2
+    error 10 UngradedSuccessor
+      description  A successor is not a patch or minor step over its predecessor, and no major was requested
+      source  spec/lira.md §12.3
+    error 11 DuplicateModule
+      description  A buildpath holds more than one release of a module
+      source  spec/lira.md §13.3
+    error 12 NamespaceClash
+      description  Two releases of a buildpath claim clashing namespaces
+      source  spec/lira.md §13.3
+    error 13 AbsentDependency
+      description  A module named by a dependency is absent from the buildpath
+      source  spec/lira.md §13.3
+    error 14 Unsatisfiable
+      description  No release of a module satisfies a requirement on it
+      source  spec/lira.md §13.3
+    error 15 BadDirective
+      description  A file does not begin with the fixed eight-byte header
+      source  spec/lira.md §5.1
+    error 16 SigilSpecified
+      description  The manifest ends at or before the end of the file, carrying no payload
+      source  spec/lira.md §5.1
+    error 17 VersionRequired
+      description  A published release carries no version, or one with major 0
+      source  spec/lira.md §12.5
+    error 18 BuildPinned
+      description  A dependency is pinned to a build
+      source  spec/lira.md §12.5
+    error 19 UnpublishedDependency
+      description  A required snapshot appears in no published lineage
+      source  spec/lira.md §12.5
+    error 20 VersionProjection
+      description  The version is not the projection of the lineage
+      source  spec/lira.md §12.5
+    error 21 BadSignature
+      description  A signature does not verify
+      source  spec/lira.md §16
+    error 22 UnknownAlgorithm
+      description  A signature's algorithm is not implemented by the verifier
+      source  spec/lira.md §16
+    error 23 UnknownKey
+      description  A signature's key fingerprint matches no trusted key
+      source  spec/lira.md §16
+    error 24 BadResource
+      description  Resource declarations are ill-formed
+      source  spec/lira.md §11.4
+    error 25 IneffectiveResource
+      description  A declared resource resolves to nothing, or to content another discipline claims
+      source  spec/lira.md §11.4
+    error 26 ResourceClash
+      description  Two modules export or track overlapping resource paths
+      source  spec/lira.md §13.3
+    error 27 InapplicableDiscipline
+      description  A declared discipline atomizes no universe the release carries
+      source  spec/lira.md §9.6
+    error 28 ProfileViolated
+      description  A declared ecosystem profile is violated
+      source  spec/lira.md §11.6
+    error 29 ProfileWeakens
+      description  A profile weakens a core requirement
+      source  spec/lira.md §11.6
+    error 30 UnrecordedBreak
+      description  A step does not preserve a guarantee level which a profile does not record
+      source  spec/lira.md §12.4
+    error 31 BadIntegration
+      description  The integrations of a release are ill-formed
+      source  spec/lira.md §9.5
+    error 32 NoAssignment
+      description  No integration of a module is satisfiable on the buildpath
+      source  spec/lira.md §13.3
+    error 33 UnrealizedIntegration
+      description  A declared integration has no section
+      source  spec/lira.md §9.5
+    error 34
+      description  Content is not claimed in the claiming order
+      source  spec/lira.md §11.2
+    error 35 BadHostContract
+      description  A host contract is ill-formed
+      source  spec/lira.md §9.4
+    error 36 UnsatisfiedRequirement
+      description  No given host contract satisfies a requirement
+      source  spec/lira.md §13.3
+    error 37 NotHostContract
+      description  A requirement names a module whose releases are not host contracts
+      source  spec/lira.md §9.4
+    error 38 BadDerivative
+      description  A declared derivative hash does not recompute
+      source  spec/lira.md §13.6
+    error 39 MalformedPayload
+      description  The payload is not a well-formed Brotli stream
+      source  spec/lira.md §8.1
+    error 40 UnimplementedClaim
+      description  A declared discipline or profile has no implementation to check it
+      source  spec/lira.md §16
+    error 41 AtomsMismatch
+      description  A declared atom listing does not recompute from the content
+      source  spec/lira.md §16
+    error 42 TagReassigned
+      description  A tag names a different release of the module
+      source  spec/lira.md §12.6
+    error 43
+      description  An `app` section does not have the shape its kind admits
+      source  spec/lira.md §9.4
+    error 44
+      description  Content of an `app` or `env` section which no discipline claims is not claimed atomless
+      source  spec/lira.md §9.4
+    error 45
+      description  An environment is not valid
+      source  spec/lira.md §13.7
+    error 46
+      description  A transition of an environment leaves it, or a rolling deployment's intermediate state, invalid
+      source  spec/lira.md §13.7
+    error 47
+      description  An environment is named as a dependency
+      source  spec/lira.md §9.4
+    error 48
+      description  An `env` section does not have the shape its kind admits
+      source  spec/lira.md §9.4
+    error 49
+      description  Two binding addresses are equal, or one is a path-prefix of the other
+      source  spec/lira.md §13.7
+    error 50
+      description  A requirement is not satisfied by every concurrently-serving release of its provider
+      source  spec/lira.md §13.7
+    error 51
+      description  An increment file's prefix, manifest or header is not valid, or it carries no body
+      source  spec/increment.md §3
+    error 52
+      description  An increment does not apply to its base
+      source  spec/increment.md §7
+    error 53
+      description  An increment's command stream is not well-formed
+      source  spec/increment.md §5
+    error 54
+      description  An increment's priming prefix is not the one its header's parameters fix
+      source  spec/increment.md §6
+    error 55
+      description  The blob stream an increment reconstructs does not verify
+      source  spec/increment.md §7
+    error 56
+      description  An increment is given an identity
+      source  spec/increment.md §8
+
+  subdivision 2 format
+    error 1 Discipline.Error
+      description  A discipline could not atomize the content it claimed
+      source src/format/lira.Discipline.scala
+      variant 1 Malformed
+      variant 2 Duplicate
+      variant 3 Unresolved
+      variant 4 Nondeterminism
+
+  subdivision 3 derive
+
+  subdivision 4 bundle
+
+  subdivision 5 classfile
+
+  subdivision 6 foreign
+
+  subdivision 7 tasty
+
+  subdivision 8 core
+    error 1 DeltaError
+      description  A delta file did not parse, named an absent base, or did not reconstruct its release
+      source src/core/lira.DeltaFile.scala
+    error 2 StoreError
+      description  A store object failed re-verification, or an operation addressed an absent object
+      source src/core/lira.Store.scala
+
+  subdivision 9 launcher
+
+  subdivision 10 tool

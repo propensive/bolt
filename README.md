@@ -41,8 +41,8 @@ registry records what each normally is.
 
 | Letter | Project | Registry |
 | ------ | ------- | -------- |
+| `a` | LIRA | [`a.tel`](a.tel) |
 | `f` | Pyrocosm, and its tools | `f.tel` |
-| `l` | LIRA | `l.tel` |
 | `p` | Proscala | [`p.tel`](p.tel) |
 | `s` | Soundness | [`s.tel`](s.tel) |
 | `t` | TEL | [`t.tel`](t.tel) |
@@ -137,3 +137,8 @@ as a `site`. Both are edited by hand, with the next free number.
 each follows those it depends on, an error for each numbered error of the
 library, and a variant for each reason the error distinguishes. A library
 added later takes the next free number.
+
+`a.tel` records LIRA's: subdivision 1 is the validity rules of the LIRA
+Specification and its companions, which every implementation reports under the
+same codes (`↯/a.1.8` was L108), and the subdivisions after it are the modules
+of the `lira` implementation, in the order of their dependencies.
