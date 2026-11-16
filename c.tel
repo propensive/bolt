@@ -1,0 +1,243 @@
+tel 1.0 propensive.dev/bolt
+
+# Bolt codes of Consequent Style: `subdivision 2` / `error 2` / `variant 1` is ↯/c.2.2.1, the
+# first failure of the second rule of the second principle, Anchoring. Each principle is a
+# subdivision, numbered in the order the standard sets them out; each rule, an error, numbered in
+# the order of Part II; each distinct failure of a rule, a variant. The rules were identified
+# before as `A2.1` (and before that in Soundness's `SN-` scheme), which `doc/rules/README.md` in
+# propensive/flare maps onto these codes. A checker reports a violation under a code of its own
+# carrying the rule's: flare's is `↯/f.21.1/c.2.2.1`.
+
+project c consequent
+  description  Consequent Style, the layout standard for Scala which flare checks
+
+  subdivision 1 frame
+    description  The Frame: the fixed shape every file sits in
+    error 1 LicenceFrame
+      description  Licence-header block comment
+      source doc/rules/c.1.1.md
+    error 2 PackageDeclaration
+      description  `package` declaration on line `header + 1`
+      source doc/rules/c.1.2.md
+    error 3 PackageBlank
+      description  Blank line after `package`
+      source doc/rules/c.1.3.md
+    error 4 LineLength
+      description  Line length
+      source doc/rules/c.1.4.md
+    error 5 RawTabs
+      description  Tab characters
+      source doc/rules/c.1.5.md
+    error 6 IndentWidth
+      description  Indent width must be even
+      source doc/rules/c.1.6.md
+    error 7 TrailingWhitespace
+      description  Trailing whitespace
+      source doc/rules/c.1.7.md
+    error 8 CommentShape
+      description  Block-comment usage
+      source doc/rules/c.1.8.md
+      variant 1
+        description  No /** … */ doc comments
+      variant 2
+        description  No /* … */ block comments outside the licence
+
+  subdivision 2 anchoring
+    description  Anchoring: where a continuation line begins
+    error 1 ContinuationIndent
+      description  Continuation indent
+      source doc/rules/c.2.1.md
+    error 2 SequenceLayout
+      description  Keyword-sequence layout
+      source doc/rules/c.2.2.md
+      variant 1
+        description  keyword <elem> must start on the same line as <anchor> (line <anchorLine>) or on a new line in column <anchorCol> (found line <elem>, column <elem>)
+      variant 2
+        description  body after <elem> must be indented onto a new line because an earlier body in this sequence is
+    error 3 DefinitionAnchors
+      description  Type-annotation anchor
+      source doc/rules/c.2.3.md
+    error 4 HeavyBracketAnchor
+      description  Anchor of a heavy argument block
+      source doc/rules/c.2.4.md
+    error 5 BodyScopeIndent
+      description  Indented scope body
+      source doc/rules/c.2.5.md
+    error 6 SignatureEqLast
+      description  Signature `=` placement
+      source doc/rules/c.2.6.md
+    error 7 GivenArrowAlign
+      description  `given` continuation alignment
+      source doc/rules/c.2.7.md
+    error 8 InterpolationLayout
+      description  Multi-line interpolated-string layout
+      source doc/rules/c.2.8.md
+      variant 1
+        description  the content of a multi-line <info><q> string must begin on the line after the opening quotes
+      variant 2
+        description  the content of a multi-line <info><q> string must be indented to column <expected>
+      variant 3
+        description  a line of a multi-line <info><q> string must not be indented less than the first content line (column <expected>)
+      variant 4
+        description  the closing <q> of a multi-line <info><q> string must be alone on its line, aligned with the opening quotes (column <col>)
+    error 9 QuoteSpliceLayout
+      description  Quote and splice layout
+      source doc/rules/c.2.9.md
+      variant 1
+        description  closing } of a multi-line quote/splice at column <cols> does not align with its opening { at column <opener>
+      variant 2
+        description  <arr> and { of a multi-line quote/splice must be separated by exactly one space
+      variant 3
+        description  the <arr> { opener of a multi-line quote/splice must be alone on its line (only enclosing ( / { permitted)
+      variant 4
+        description  body of a multi-line quote/splice must be indented to column <top> (found <leadingCols>)
+      variant 5
+        description  closing } of a multi-line quote/splice must be alone on its line (only trailing ) / } permitted)
+      variant 6
+        description  no space is permitted directly after <prefix><text> in an inline quote/splice
+
+  subdivision 3 density
+    description  Density: how much to fit on one line
+    error 1 UnnecessaryBreak
+      description  Unnecessary line break
+      source doc/rules/c.3.1.md
+    error 2 LambdaLayout
+      description  Lambda bracketing
+      source doc/rules/c.3.2.md
+      variant 1
+        description  named-parameter lambda must be wrapped in {…}, not (…) (or use f: x => … since the lambda is last on the line)
+      variant 2
+        description  lambda is the last thing on its line; prefer f: x => … over f { x => … }
+      variant 3
+        description  multi-line lambda must use a colon-arg f: x => … form, not <s>
+      variant 4
+        description  anonymous (_-)lambda must be wrapped in (…), not <s>
+
+  subdivision 4 continuation-marking
+    description  Continuation Marking: showing that a line is unfinished
+    error 1 ChainContinuation
+      description  `.method` continuation lines
+      source doc/rules/c.4.1.md
+      variant 1
+        description  Blank line required before continuation
+      variant 2
+        description  No blank line at the same indent
+    error 2 OperatorContinuation
+      description  Symbolic infix operator continuation
+      source doc/rules/c.4.2.md
+      variant 1
+        description  a multi-line infix operator must terminate the first line, not begin the continuation line
+      variant 2
+        description  a multi-line infix continuation must be indented <op> columns (found <op>)
+      variant 3
+        description  a trailing infix operator must be preceded by exactly one space, balancing the line break that follows it
+    error 3 HardSpace
+      description  Continuation indents after `=>` and heavy `:`
+      source doc/rules/c.4.3.md
+
+  subdivision 5 balance
+    description  Balance: symmetry of spacing around a token
+    error 1 OperatorSpacing
+      description  Operator spacing
+      source doc/rules/c.5.1.md
+    error 2 AssignmentSpacing
+      description  Assignment spacing
+      source doc/rules/c.5.2.md
+    error 3 SymbolicMethodNames
+      description  Single space between specific tokens
+      source doc/rules/c.5.3.md
+    error 4 FormalBlockSpacing
+      description  Multi-line block bracket spacing
+      source doc/rules/c.5.4.md
+    error 5 CompactBracketSpacing
+      description  Bracket inner spacing
+      source doc/rules/c.5.5.md
+
+  subdivision 6 proximity
+    description  Proximity: blank lines and gaps as grouping
+    error 1 CommaSpacing
+      description  Spacing around commas
+      source doc/rules/c.6.1.md
+      variant 1
+        description  No space before a comma
+      variant 2
+        description  Exactly one space after a comma
+    error 2 ChunkSeparation
+      description  Blank-line spacing between sibling declarations
+      source doc/rules/c.6.2.md
+    error 3 BlankLineRun
+      description  Too many consecutive blank lines
+      source doc/rules/c.6.3.md
+    error 4 ReturnTypeBlank
+      description  Blank line after heavy-signature return type
+      source doc/rules/c.6.4.md
+    error 5 ImportSeparation
+      description  Blank line after imports
+      source doc/rules/c.6.5.md
+    error 6 AnnotationAdjacency
+      description  Annotations and following declarations
+      source doc/rules/c.6.6.md
+      variant 1
+        description  Annotation not followed by a declaration
+      variant 2
+        description  No blank line between annotation and declaration
+
+  subdivision 7 tabulation
+    description  Tabulation: vertical alignment across a run of lines
+    error 1 CaseAlignment
+      description  `=>` alignment in case run
+      source doc/rules/c.7.1.md
+      variant 1
+        description  => of a multi-line case pattern must trail the last pattern token on the same line, not stand alone on its own line
+      variant 2
+        description  body of a multi-line case pattern must start on the line after =>
+      variant 3
+        description  exactly one space is required before => in a multi-line case
+    error 2 UsingAlignment
+      description  `using`-clause alignment
+      source doc/rules/c.7.2.md
+    error 3 ForComprehensionAlignment
+      description  `for`-comprehension layout
+      source doc/rules/c.7.3.md
+      variant 1
+        description  <-/= should be vertically aligned at column <anchorOpCol> (found <gl>)
+      variant 2
+        description  generator should align with the first generator's LHS at column <anchorLhsCol> (found <gl>)
+      variant 3
+        description  if filter should align with <-/= at column <anchorOpCol> (found <gl>)
+      variant 4
+        description  if filter must not be separated from the preceding enumerator by a blank line
+
+  subdivision 8 locatability
+    description  Locatability: finding a definition from its name
+    error 1 ImportOrdering
+      description  Top-level import rules
+      source doc/rules/c.8.1.md
+      variant 1
+        description  No aliases
+      variant 2
+        description  Group order
+      variant 3
+        description  Group separation
+    error 2 FileNaming
+      description  File naming conventions
+      source doc/rules/c.8.2.md
+    error 3 CompanionOrdering
+      description  `object` must precede `class`/`trait`/`enum` of same name
+      source doc/rules/c.8.3.md
+    error 4 UmbrellaExportCompleteness
+      description  Definition not exported to the umbrella package
+      source doc/rules/c.8.4.md
+    error 5 ExtensionExportCompleteness
+      description  Extension method not exported to the umbrella package
+      source doc/rules/c.8.5.md
+
+  subdivision 9 soundness
+    description  Soundness: what the code claims about itself
+    error 1 UnsafeNaming
+      description  Unsafe naming
+      source doc/rules/c.9.1.md
+      variant 1
+        description  <name> is gated by <token>, so its name must begin <prefix>
+      variant 2
+        description  <name> is named as <prefix>, so it must take (using erased <token>)

@@ -1,0 +1,956 @@
+tel 1.0 propensive.dev/bolt
+
+# Bolt codes of Pyrocosm and its tools, which share the letter `f`: `subdivision 8` / `error 1` /
+# `variant 3` is ↯/f.8.1.3. Each module of Pyrocosm is a subdivision, numbered so that each comes
+# after those it depends on (`harness` 1 to `cli` 14); then the modules of each tool, in the order
+# of their dependencies: fever 15–16, flame 17–20, flare 21–24, fuel 25–28, fume 29–32 and fury
+# 33–34. Errors and the diagnostics a tool reports alike have codes. A code which carries another,
+# as ↯/f.10.1/f.8.1.3 or ↯/f.21.1/c.2.2.1, reports its error on account of that one.
+
+project f pyrocosm
+  description  Pyrocosm, the framework of Propensive's tools, and the tools built on it
+
+  subdivision 1 harness
+  subdivision 2 model
+  subdivision 3 compiler
+  subdivision 4 media
+  subdivision 5 script
+  subdivision 6 system
+  subdivision 7 notes
+    error 1 Notes.Error
+      description  An operation on the git notes in which Pyrocosm's tools record what they know fails
+      source src/notes/pyrocosm.Notes.scala
+      variant 1 BadRef
+        description  a refspec does not name a commit
+      variant 2 GitFailed
+        description  git exits with a failing status
+      variant 3 Undecodable
+        description  a note cannot be decoded
+      variant 4 Diverged
+        description  the notes on a remote have diverged from the local notes
+  subdivision 8 remote
+    error 1 Peer.Error
+      description  A connection to another machine cannot be made
+      source src/remote/pyrocosm.Peer.scala
+      variant 1 NoIdentity
+        description  the machine declares no identity fingerprint to pin
+      variant 2 NoToken
+        description  the machine declares no token
+      variant 3 Unreachable
+        description  the machine cannot be connected to
+      variant 4 Refused
+        description  the peer refuses the connection
+      variant 5 Protocol
+        description  the peer speaks another protocol
+      variant 6 Disconnected
+        description  the peer closes the connection during the handshake
+      variant 7 Identity
+        description  this machine's identity cannot be created or read
+    error 2 Invitation.Error
+      description  An invitation to connect to a machine is not accepted
+      source src/remote/pyrocosm.Invitation.scala
+      variant 1 Malformed
+        description  it is not an invitation
+      variant 2 Expired
+        description  it has expired
+      variant 3 Used
+        description  it has been used already
+      variant 4 Tool
+        description  it is an invitation to another tool
+      variant 5 Unwritable
+        description  the machine it invites to cannot be recorded
+  subdivision 9 bus
+  subdivision 10 swarm
+    error 1 Swarm.Error
+      description  A ping to another machine fails; a failed connection carries its own code, ↯/f.10.1/f.8.1.3, in place of a variant
+      source src/swarm/pyrocosm.Swarm.scala
+      variant 2 Unanswered
+        description  the connection closes before a pong arrives
+      variant 3 Silent
+        description  no pong arrives in time
+      variant 4 Mismatched
+        description  the two nodes cannot agree a protocol
+  subdivision 11 terminal
+  subdivision 12 web
+  subdivision 13 hub
+  subdivision 14 cli
+
+  # fever
+  subdivision 15 core
+    error 1 Launch.Error
+      description  A compiled script has no entry point which Fever can run
+      source src/core/fever.Launch.scala
+      variant 1 NoMain
+        description  the script defines no top-level `def main(using Runtime): Unit`
+      variant 2 WrongSignature
+        description  the script's `main` has a signature other than `def main(using Runtime): Unit`
+      variant 3 Uninspectable
+        description  the compiled script's TASTy cannot be inspected, or its class cannot be loaded
+    error 2 Script.Error
+      description  A script's header is invalid; a header which is not TEL carries TEL's own code, ↯/f.15.2/s.118.1/t.1.7, in place of a variant
+      source src/core/fever.Script.scala
+      variant 2 NoSeparator
+        description  the file has no `##` line separating the header from the source
+      variant 3 Invalid
+        description  the header breaks the script schema; each rejection is a diagnostic carrying the code of the TEL error which found it
+    error 3 NotResident
+      description  A script named by `fever stop` is not resident in the daemon
+      source src/core/fever.Scripts.scala
+    error 4 CompilerCrash
+      description  The compiler crashes rather than finishing a script's compilation
+      source src/core/fever.Scripts.scala
+    error 5 Unanticipated
+      description  Running a script throws what no exit status anticipates, a bug in Fever; it carries the throwable's own code, if it has one
+      source src/core/fever_cli.scala
+    error 6 Unimplemented
+      description  A subcommand is not yet implemented
+      source src/core/fever_cli.scala
+    error 7 Usage
+      description  The command line is not understood
+      source src/core/fever_cli.scala
+  subdivision 16 launcher
+
+  # flame
+  subdivision 17 core
+    error 1 SubmissionFailed
+      description  A submission could not be evaluated, and is answered with a failure; a failure on account of a coded error carries that error's code
+      source src/core/flame.Repl.scala
+      variant 1 Unprocessed
+        description  the input could not be compiled or run, because something escaped the engine's guards
+      variant 2 Unrendered
+        description  the result could not be rendered as a reply
+      variant 3 Unanswered
+        description  an asynchronous submission could not be processed
+      variant 4 Thrown
+        description  an asynchronous submission raised an error which no guard caught
+    error 2 SessionRefused
+      description  The session named at startup could not be opened as asked
+      source src/core/flame.ReplInterface.scala
+      variant 1 Missing
+        description  no session of that name exists to join
+      variant 2 Exists
+        description  a session of that name already exists, so it cannot be created
+    error 3 NoActiveSession
+      description  A submission arrived on a connection which has no active session
+      source src/core/flame.Sessions.scala
+    error 4 RequestFailed
+      description  A request to the REPL server could not be answered; a failure on account of a coded error carries that error's code
+      source src/core/flame.Sessions.scala
+      variant 1 Unparsed
+        description  the request could not be parsed
+      variant 2 Thrown
+        description  answering the request raised an error
+  subdivision 18 web
+    error 1 RequestFailed
+      description  A web page's request to the in-process sessions raised an error; it carries the error's own code, if it has one
+      source src/web/flame_web.scala
+    error 2 NoSuchSession
+      description  A REST API request names a session which does not exist
+      source src/web/flame_web.scala
+    error 3 MalformedBody
+      description  A REST API request's body is not the JSON the endpoint expects
+      source src/web/flame_web.scala
+      variant 1 Eval
+        description  the body of an `eval` request is not `{"code": "…"}`
+      variant 2 Complete
+        description  the body of a `complete` request is not `{"code": "…", "offset": N}`
+  subdivision 19 client
+    error 1 SessionArguments
+      description  The arguments choosing a session contradict each other, or are incomplete
+      source src/client/flame_client.scala
+      variant 1 JoinAndCreate
+        description  both `--join` and `--create` are given
+      variant 2 JoinUnnamed
+        description  `--join` is given without a session name
+      variant 3 CreateUnnamed
+        description  `--create` is given without a session name
+      variant 4 ConfigJoinAndCreate
+        description  the workspace's `config.tel` names both a session to join and one to create
+    error 2 Unserved
+      description  A REPL server could not serve; a failure on account of a coded error carries that error's code
+      source src/client/flame_client.scala
+      variant 1 PortUnavailable
+        description  the TCP port cannot be bound
+      variant 2 Failed
+        description  serving on the TCP port raised an error
+      variant 3 SocketInUse
+        description  the UNIX domain socket is already in use
+      variant 4 SocketFailed
+        description  serving on the UNIX domain socket raised an error
+    error 3 InvalidArgument
+      description  A command-line argument is invalid
+      source src/client/flame_client.scala
+      variant 1 Port
+        description  the port is not a valid TCP port
+      variant 2 HostMissing
+        description  `--host` is given without a hostname
+      variant 3 Host
+        description  the hostname is not valid
+    error 4 Unreachable
+      description  The client could not reach a REPL server
+      source src/client/flame_client.scala
+      variant 1 Remote
+        description  the server on the remote host and port refuses the connection
+      variant 2 Socket
+        description  the server on the UNIX domain socket refuses the connection
+      variant 3 Launch
+        description  a REPL server could not be started in the background
+    error 5 SeveralServers
+      description  Several local REPL servers are running, and the client cannot choose between them
+      source src/client/flame_client.scala
+    error 6 Terminal
+      description  The terminal could not be initialised; the failure carries the terminal error's code
+      source src/client/flame_client.scala
+  subdivision 20 launcher
+
+  # flare
+  subdivision 21 plugin
+    error 1 StyleViolation
+      description  A source violates a rule of Consequent Style; the code carries the rule's own `c` code, as `↯/f.21.1/c.2.2.1`
+      source src/plugin/flare.FlareBolts.scala
+    error 2 ProjectViolation
+      description  A source violates one of the project's own rules, which is named after the code
+      source src/plugin/flare.Rule.scala
+    error 3 Option
+      description  An option given to the compiler plugin cannot be used
+      source src/plugin/flare.Config.scala
+      variant 1 NotCount
+        description  a numeric option is not a non-negative integer
+      variant 2 Header
+        description  the licence header file cannot be read
+      variant 3 Predicate
+        description  a project rule names a predicate which does not exist
+      variant 4 Rule
+        description  a `rule` option is not `<name>:<predicate>:<target>`
+      variant 5 Enforce
+        description  an `enforce` option is not `<rule>` or `<rule>:<severity>`
+      variant 6 Unknown
+        description  the option is not one the plugin recognises
+      variant 7 Undefined
+        description  a rule is enforced but not defined
+      variant 8 Empty
+        description  a project rule has no predicates
+      variant 9 Letter
+        description  an `omit` or `strict` entry names a rule by the letter identifier it had before its code
+  subdivision 22 records
+  subdivision 23 client
+    error 1 Configuration
+      description  The configuration file cannot be used
+      source src/client/flare.Workspace.scala
+      variant 1 Missing
+        description  no `.pyrocosm/flare/config.tel` is found at or above the directory
+      variant 2 Unreadable
+        description  the file cannot be read as TEL
+      variant 3 NoProfile
+        description  the file defines no profile
+    error 2 Model
+      description  A model target in the configuration is not well defined
+      source src/client/flare.Workspace.scala
+      variant 1 Unnamed
+        description  the model has no name
+      variant 2 Provider
+        description  the provider is not one flare can consult
+      variant 3 NoModel
+        description  the target names no model
+      variant 4 Mode
+        description  the mode is neither `batches` nor `realtime`
+      variant 5 Duplicate
+        description  the model is defined more than once
+    error 3 Assessment
+      description  An assessment rule in the configuration is not well defined
+      source src/client/flare.Workspace.scala
+      variant 1 Keyword
+        description  the rule uses a keyword which is not an assessment keyword
+      variant 2 Unit
+        description  the rule assesses something other than definitions
+      variant 3 NoModel
+        description  the rule names no model
+      variant 4 UndefinedModel
+        description  the rule names a model which is not defined
+      variant 5 NoRubric
+        description  the rule names no rubric
+      variant 6 Weightless
+        description  a criterion has no weight
+      variant 7 Criterion
+        description  a criterion has no id or no weight
+      variant 8 DuplicateCriterion
+        description  a criterion is defined more than once
+      variant 9 NoCriteria
+        description  the rule has no criteria
+      variant 10 Bands
+        description  the bands do not descend
+      variant 11 Signal
+        description  a signal has no kind or no points
+    error 4 Rule
+      description  A project rule in the configuration is not well defined
+      source src/client/flare.Workspace.scala
+      variant 1 Predicate
+        description  the rule uses a keyword which is not a predicate
+      variant 2 Target
+        description  a predicate's target is not one it can match
+      variant 3 Empty
+        description  the rule has no predicates
+      variant 4 Duplicate
+        description  the rule is defined more than once
+    error 5 Profile
+      description  A profile in the configuration is not well defined
+      source src/client/flare.Workspace.scala
+      variant 1 Unnamed
+        description  the profile has no name
+      variant 2 Reserved
+        description  the profile is named as a subcommand is
+      variant 3 NoSources
+        description  the profile names no sources
+      variant 4 Style
+        description  the style is not `consequent`
+      variant 5 Enforced
+        description  the profile enforces a rule which is not defined
+      variant 6 Assessed
+        description  the profile assesses a rule which is not an assessment rule
+      variant 7 Duplicate
+        description  the profile is defined more than once
+    error 6 PluginOptions
+      description  A profile cannot be used because the plugin rejects the options it amounts to; the code carries the plugin's `↯/f.21.3` variant
+      source src/client/flare.Workspace.scala
+    error 7 Selection
+      description  The command line does not say what to check or assess
+      source src/client/flare_client.scala
+      variant 1 Profile
+        description  the configuration defines several profiles and none is named
+      variant 2 Assessments
+        description  the profile assesses nothing and no assessment rule is named
+    error 8 Parse
+      description  A source file does not parse
+      source src/client/flare.Frontend.scala
+    error 9 NoRepository
+      description  The project is not in a git repository, so nothing can be recorded
+      source src/client/flare_client.scala
+    error 10 Notes
+      description  The git notes cannot be read or written
+      source src/client/flare_client.scala
+      variant 1 NoCensus
+        description  no census is recorded for the commit or tree
+      variant 2 Target
+        description  the target is not a commit or a tree
+      variant 3 Unwritten
+        description  the notes cannot be written
+      variant 4 InputTree
+        description  the input tree cannot be written
+      variant 5 NoAssessment
+        description  no assessment is recorded for the commit or tree
+    error 11 Assessing
+      description  An assessment rule cannot be run
+      source src/client/flare_client.scala
+      variant 1 Model
+        description  the rule names a model which is not defined
+      variant 2 Rubric
+        description  the rubric cannot be read
+      variant 3 Credential
+        description  no credential for the model can be found
+    error 12 Batch
+      description  A batch of candidates is not judged, because the model fails; the code carries the model's error
+      source src/client/flare.Assessing.scala
+  subdivision 24 launcher
+
+  # fuel
+  subdivision 25 core
+    error 1 Unreadable
+      description  A file cannot be read
+      source src/core/fuel.Compilation.scala
+    error 2 Unclosed
+      description  A fence in a document is not closed
+      source src/core/fuel.Doc.scala
+    error 3 Ambiguous
+      description  A reference in a document or on an API's page names more than one entity, so it is not linked
+      source src/core/fuel.Doc.scala
+    error 4 Glossary
+      description  A glossary is not as it should be
+      source src/core/fuel.Glossary.scala
+      variant 1 Schema
+        description  the glossary schema finds a fault; carries the code of the TEL error
+      variant 2 Term
+        description  a glossary which is not a translation gives a name a `term`
+      variant 3 Unnameable
+        description  a term's name holds a bracket, so it cannot be a term
+      variant 4 Duplicate
+        description  a term, or a name it has, is defined already
+      variant 5 Short
+        description  a term's name is one character, which any `[x]` in prose matches
+      variant 6 UnnameableSynonym
+        description  a synonym holds a bracket, so it cannot be a name
+      variant 7 DuplicateSynonym
+        description  a synonym is a name already
+    error 5 Mirror
+      description  A translation of a document differs in structure from the text it translates
+      source src/core/fuel.Mirror.scala
+      variant 1 Citations
+        description  a paragraph or heading does not name the code, or lead to the places, the one it translates does
+      variant 2 Items
+        description  a list has a different number of items from the one it translates
+      variant 3 Level
+        description  a heading is of a different level from the one it translates
+      variant 4 Fence
+        description  a fence is not the one it translates
+      variant 5 Kind
+        description  a block is of a different kind from the one it translates
+      variant 6 Extra
+        description  the translation has a block the text it translates does not
+      variant 7 Lacking
+        description  the translation lacks a block the text it translates has
+    error 6 Presentation
+      description  A presentation is not as it should be
+      source src/core/fuel.Presentation.scala
+      variant 1 Schema
+        description  the presentation schema finds a fault; carries the code of the TEL error
+      variant 2 EmptyCode
+        description  a slide's code has nothing in its `code`
+      variant 3 EmptySlide
+        description  a slide is empty
+    error 7 SectionFile
+      description  A section's file, or a translation of one, is not as it should be
+      source src/core/fuel.SectionFile.scala
+      variant 1 Schema
+        description  the section file's schema finds a fault; carries the code of the TEL error
+      variant 2 Untitled
+        description  a translation lacks the title of the file it translates
+      variant 3 Orphaned
+        description  a translation has a title the file it translates no longer has
+    error 8 Table
+      description  A `tabular` fence is not a table
+      source src/core/fuel.Tables.scala
+      variant 1 Schema
+        description  the table schema finds a fault; carries the code of the TEL error
+      variant 2 Alignment
+        description  a column is aligned other than `start` or `end`
+      variant 3 Wide
+        description  a row has more cells than the table has columns
+      variant 4 NoColumn
+        description  the table has no `column`
+      variant 5 NoRow
+        description  the table has no `row`
+    error 9 Translation
+      description  A translation of a document is not of the text it translates as it stands
+      source src/core/fuel.Translation.scala
+      variant 1 Gained
+        description  the text it translates has gained lines which are not translated
+      variant 2 Lost
+        description  the text it translates has lost lines
+      variant 3 Changed
+        description  the text it translates has changed
+      variant 4 Unpaired
+        description  `+` lines translate nothing
+      variant 5 Pending
+        description  a passage awaits revision, from its `!` lines to its `-` lines
+      variant 6 Orphaned
+        description  the text a passage translates has gone
+      variant 7 Untranslated
+        description  a passage is not translated
+      variant 8 Absent
+        description  a file has no translation into a language it is translated into
+        source src/core/fuel.Translations.scala
+    error 10 Sample
+      description  A fence's `path` cannot be written as a sample file
+      source src/core/fuel_core.scala
+      variant 1 Escapes
+        description  the `path` is not a file within the document's own directory
+      variant 2 Unwritable
+        description  the sample file cannot be written
+    error 11 Fixture
+      description  A document's fixture cannot be compiled before its fragments
+      source src/core/fuel_core.scala
+      variant 1 Unentered
+        description  the fixture cannot be entered into the session
+      variant 2 Compilation
+        description  the fixture does not compile; carries the compiler's code, where it has one
+      variant 3 Crash
+        description  the compiler fails on the fixture
+    error 12 Frame
+      description  A frame of an animated fence is not as it should be
+      source src/core/fuel_core.scala
+      variant 1 NoCode
+        description  a frame has no `code`
+      variant 2 NoAlternativeCode
+        description  a frame of an alternative has no `code`
+      variant 3 Unhighlighted
+        description  a frame cannot be highlighted
+      variant 4 Compilation
+        description  a frame does not compile; carries the compiler's code, where it has one
+    error 13 Run
+      description  A fragment cannot be run, or does not run as its preamble says
+      source src/core/fuel_core.scala
+      variant 1 Parsed
+        description  a fragment which is only parsed is marked to run
+      variant 2 Type
+        description  a type is marked to run
+      variant 3 Animated
+        description  an animated fragment is marked to run
+      variant 4 Uncompiled
+        description  the fragment cannot be compiled to be run
+      variant 5 Threw
+        description  the fragment throws
+      variant 6 NoError
+        description  a fragment marked `errors show` runs without error
+    error 14 Fragment
+      description  A fragment of Scala does not compile as its preamble says
+      source src/core/fuel_core.scala
+      variant 1 Unshown
+        description  a fence with `alternative`s has code after `##`, which is not shown
+      variant 2 Unhighlighted
+        description  the fragment cannot be highlighted
+      variant 3 Compiled
+        description  a line marked `// does not compile` compiles
+      variant 4 Compilation
+        description  the compiler reports on the fragment; carries the compiler's code, where it has one
+      variant 5 NoError
+        description  a fragment marked `errors show` compiles
+  subdivision 26 api
+    error 1 GlossaryTranslation
+      description  A translation of a glossary is not as it should be
+      source src/api/fuel.GlossaryTranslations.scala
+      variant 1 NoEntry
+        description  the translation has no entry for a term
+      variant 2 UnknownTerm
+        description  the glossary it translates has no term an entry is for
+      variant 3 Duplicate
+        description  a term has an entry already
+      variant 4 Gone
+        description  the definition an entry translates has gone
+      variant 5 Untranslated
+        description  an entry lacks the translation of a definition
+      variant 6 Unnamed
+        description  an entry gives no `term`, the term's name in its language
+      variant 7 Unnameable
+        description  a `term` holds a bracket, so it cannot be a term
+      variant 8 Homonym
+        description  a `term` is also the name of another term
+      variant 9 Shared
+        description  a `term` is another entry's already
+      variant 10 UnnameableSynonym
+        description  a synonym holds a bracket, so it cannot be a name
+      variant 11 DuplicateSynonym
+        description  a synonym is a name in the language already
+      variant 12 Link
+        description  a `link` is in place of the page of the site which explains the term
+    error 2 Inspection.ReadError
+      description  The compiler cannot read what it is given while it walks an API
+      source src/api/fuel.Inspection.scala
+    error 3 Link
+      description  A link in a document leads nowhere
+      source src/api/fuel.Links.scala
+      variant 1 NoPlace
+        description  another document has no such place
+      variant 2 NoDocument
+        description  a section has no such document
+      variant 3 NoAnchor
+        description  this document has no such place
+      variant 4 NoMember
+        description  an API's page has no such member
+      variant 5 NoApiPage
+        description  there is no such API page
+      variant 6 NoTerm
+        description  the glossary has no such term
+      variant 7 NoPage
+        description  there is no such page
+      variant 8 Unresolved
+        description  a sigilled reference names nothing in scope; a caution where there is no API
+      variant 9 Late
+        description  a URL does not answer within 20 seconds
+      variant 10 InvalidUrl
+        description  a URL is not valid; carries the code of the URL's error
+      variant 11 Unfetched
+        description  a URL cannot be fetched; carries the code of the connection's error
+      variant 12 Status
+        description  a URL answers with a status of 400 or more
+    error 4 Overlay
+      description  An overlay is not as it should be
+      source src/api/fuel.Overlay.scala
+      variant 1 NoBase
+        description  the overlay does not name the package it documents with `base`
+      variant 2 Keyword
+        description  a keyword is not part of an overlay
+      variant 3 Unnamed
+        description  an `entry` does not name the member it documents
+      variant 4 Nested
+        description  a keyword which takes its value alone holds another
+      variant 5 Repeated
+        description  a keyword is given more than once
+      variant 6 InfoTwice
+        description  an entry's info is given on its line and beneath it
+      variant 7 DetailTwice
+        description  an entry's detail is given beneath its line and as a child
+      variant 8 Duplicate
+        description  a member has two entries
+      variant 9 Long
+        description  an info is longer than its limit
+      variant 10 Removed
+        description  an entry marked as removed still exists
+      variant 11 Undeclared
+        description  an entry documents a member which is not declared
+      variant 12 NoPackage
+        description  the package the overlay documents is not declared by the sources
+      variant 13 Undocumented
+        description  a public member of a documented package has no entry
+      variant 14 Format
+        description  the overlay's `format` is not one an overlay documents
+        source src/client/fuel_client.scala
+    error 5 OverlayTranslation
+      description  A translation of an overlay is not as it should be
+      source src/api/fuel.OverlayTranslations.scala
+      variant 1 Untranslated
+        description  the translation lacks prose of the overlay, which is not translated
+      variant 2 Gone
+        description  the prose a translation translates has gone
+      variant 3 NoEntry
+        description  the translation has no entry for one of the overlay's
+      variant 4 Settings
+        description  an entry's `hidden`, `until`, `refer` and `import` are not those of the entry it translates
+      variant 5 UnknownEntry
+        description  the overlay it translates has no such entry
+      variant 6 Base
+        description  the translation documents another package from the overlay it translates
+    error 6 Query.Error
+      description  A search's query cannot be read
+      source src/api/fuel.Query.scala
+      variant 1 Unterminated
+        description  a bracket or backtick is not closed
+      variant 2 EmptyOperand
+        description  a `+` or `-` has no type after it
+      variant 3 BareSymbol
+        description  a symbolic name is not written in backticks
+      variant 4 BadType
+        description  a term is not a type
+    error 7 Schema
+      description  A schema is declared by more than one of the configured files
+      source src/api/fuel.TelsFormat.scala
+  subdivision 27 client
+    error 1 Alignment
+      description  A presentation cannot be timed by the alignment it is given
+      source src/client/fuel.Presenter.scala
+      variant 1 Unreadable
+        description  the recording or alignment cannot be read
+      variant 2 Uninstalled
+        description  Montreal Forced Aligner cannot be installed
+      variant 3 Unaligned
+        description  Montreal Forced Aligner cannot align the recording
+      variant 4 NoCache
+        description  there is no cache directory to install Montreal Forced Aligner in
+      variant 5 Unrecognized
+        description  the alignment is not one fuel can read
+      variant 6 NoTranscript
+        description  a slide has no transcript
+        source src/client/fuel.ForcedAlignment.scala
+      variant 7 Different
+        description  the transcript and the alignment differ in too many words
+        source src/client/fuel.ForcedAlignment.scala
+      variant 8 Unplaced
+        description  the alignment has none of the words of a slide's transcript
+        source src/client/fuel.ForcedAlignment.scala
+    error 2 Translating
+      description  `fuel translate` cannot do what it is asked
+      source src/client/fuel.Translating.scala
+      variant 1 Stray
+        description  a file in a directory of translations translates nothing
+      variant 2 Translation
+        description  a file named is a translation, not the file it translates
+      variant 3 Untranslatable
+        description  a file named is not a document, an overlay, a glossary or a section's file
+      variant 4 Unwritable
+        description  a translation cannot be written
+      variant 5 Unconfigured
+        description  the configuration has no directory of translations
+      variant 6 Untranslated
+        description  a file named is in no section the configuration gives a translation
+      variant 7 Withheld
+        description  an update would damage a translation, so it is not written
+    error 3 Sections
+      description  The configuration's sections are not as they should be
+      source src/client/fuel.Workspace.scala
+      variant 1 Schema
+        description  the configuration's schema finds a fault in a section; carries the code of the TEL error
+      variant 2 Name
+        description  a section's name holds `/` or `#`
+      variant 3 Language
+        description  a section's original is in what is not a language
+      variant 4 Translation
+        description  a translation is not into a language, or falls back to what is not one
+      variant 5 Fallback
+        description  a translation falls back to a language the section is neither written nor translated in
+      variant 6 Own
+        description  a translation is into the language the section is written in
+      variant 7 Directory
+        description  a translation is in the directory of the text it translates
+      variant 8 Loose
+        description  a `translation` or `original` is not beneath a `section`
+      variant 9 Document
+        description  a `document` configures what is now a section
+      variant 10 Shared
+        description  more than one section has the same name
+      variant 11 NoSection
+        description  no section of documents is configured
+        source src/client/fuel_client.scala
+    error 4 Daemon
+      description  The daemon fails while carrying out a command; carries the code of the error which escaped, where it has one
+      source src/client/fuel_client.scala
+    error 5 Usage
+      description  A command line is not understood
+      source src/client/fuel_client.scala
+      variant 1 Present
+        description  `fuel present` is given no file
+      variant 2 DryRun
+        description  `fuel translate` is given `--dry-run` without `--update`
+      variant 3 Language
+        description  `fuel translate` is given a language which is not one
+      variant 4 Sync
+        description  `fuel sync github` is given no repository
+      variant 5 Unattached
+        description  `fuel sync` has no tracker attached to fetch
+      variant 6 Transcript
+        description  `fuel transcript` is given no file
+      variant 7 Show
+        description  `fuel show` is given no file
+      variant 8 Search
+        description  `fuel search` is given no query
+    error 6 Tracker
+      description  A tracker's issues cannot be attached
+      source src/client/fuel_client.scala
+      variant 1 Unfetched
+        description  the tracker's issues cannot be fetched
+      variant 2 Unnamed
+        description  a `sync` line names no tracker
+    error 7 Missing
+      description  A configured path does not exist
+      source src/client/fuel_client.scala
+      variant 1 Classpath
+        description  a classpath entry does not exist, so no fragment is compiled
+      variant 2 Source
+        description  a source directory does not exist
+      variant 3 Overlay
+        description  an overlay directory does not exist
+    error 8 Compiler
+      description  The compiler fails rather than reporting
+      source src/client/fuel_client.scala
+      variant 1 Fragments
+        description  the fragments cannot be compiled
+      variant 2 Documents
+        description  the documents cannot be highlighted
+      variant 3 Dependency
+        description  a dependency cannot be inspected
+      variant 4 Jdk
+        description  the JDK cannot be inspected
+      variant 5 Own
+        description  the project's own code cannot be inspected
+      variant 6 Unread
+        description  members cannot be read into the API's model, a caution; carries the code of `Inspection.ReadError`
+  subdivision 28 launcher
+
+  # fume
+  subdivision 29 api
+    error 1 Api.Error
+      description  An MCP tool cannot answer the question it is asked
+      source src/api/fume.Api.scala
+      variant 1 Unregistered
+        description  the fume daemon has not registered what it knows with the MCP server
+      variant 2 UnknownRun
+        description  no run is known by the id the tool is given
+      variant 3 NoEntries
+        description  the classpath the tool is given names no entries
+      variant 4 UnknownSuite
+        description  the suite the tool is given is not a suite of the run
+      variant 5 NoSuites
+        description  no test suites are found on the classpath a run is launched with
+  subdivision 30 relay
+  subdivision 31 client
+    error 1 Rejection
+      description  A worker rejects a run a controller sends it; the controller prints the rejection after its own code, ↯/f.31.7.2
+      source src/client/fume.Worker.scala
+      variant 1 Digest
+        description  the bytes sent for a classpath entry do not have its digest
+      variant 2 Missing
+        description  classpath entries the worker needs are never received
+      variant 3 NoStore
+        description  the worker has no blob store to hold the classpath in
+    error 2 NoMachine
+      description  The machine a run is sent to is neither on the swarm nor declared
+      source src/client/fume_client.scala
+    error 3 NoSuites
+      description  No test suites are found on the classpath
+      source src/client/fume_client.scala
+    error 4 Incompatible
+      description  Suites are built against a Soundness whose test events fume cannot read
+      source src/client/fume_client.scala
+      variant 1 Classpath
+        description  the classpath's event schema is not fume's, so its suites are run the legacy way
+      variant 2 Suite
+        description  a suite a worker runs has an event schema which is not fume's, so its events cannot be read
+    error 5 Consumer
+      description  The consumer of a suite's test events fails while the suite runs
+      source src/client/fume_client.scala
+      variant 1 Worker
+        description  the worker's event consumer fails
+      variant 2 Local
+        description  fume's own event consumer fails, and the suite is stopped; it carries the code of the error the consumer threw, if it has one
+    error 6 Unstreamable
+      description  A suite sent to a worker cannot stream its test events, so the worker does not run it
+      source src/client/fume_client.scala
+    error 7 Remote
+      description  A run on another machine ends before it is finished
+      source src/client/fume_client.scala
+      variant 1 Lost
+        description  the connection to the worker is lost
+      variant 2 Rejected
+        description  the worker rejects the run, for a reason which carries its own code, ↯/f.31.1
+    error 8 Connection
+      description  A connection to a worker cannot be made; it carries the code of Pyrocosm's Peer.Error for the reason, ↯/f.31.8/f.8.1.3
+      source src/client/fume_client.scala
+    error 9 TimedOut
+      description  A run does not finish within its --timeout
+      source src/client/fume_client.scala
+    error 10 NoClasspath
+      description  No --classpath is specified
+      source src/client/fume_client.scala
+    error 11 Identity
+      description  This machine's identity cannot be created for `fume listen`
+      source src/client/fume_client.scala
+    error 12 Unimplemented
+      description  A subcommand is not yet implemented
+      source src/client/fume_client.scala
+    error 13 Uninvocable
+      description  A suite cannot be invoked in a JVM of its own
+      source src/client/fume_client.scala
+  subdivision 32 launcher
+
+  # fury
+  subdivision 33 core
+    error 1 NoBuildFile
+      description  No build file is found at or above the working directory
+      source src/core/fury.Check.scala
+    error 2 RegistryLayer
+      description  A build file declares a registry layer, which the milestone refuses
+      source src/core/fury.Lint.scala
+    error 3 Repository
+      description  A build file declares a repository, which the milestone ignores
+      source src/core/fury.Lint.scala
+    error 4 Topology
+      description  A build file declares a topology, which the milestone ignores
+      source src/core/fury.Lint.scala
+    error 5 Command
+      description  A command uses what the milestone does not support
+      source src/core/fury.Lint.scala
+      variant 1 Selection
+        description  a build step makes a selection
+      variant 2 Artifact
+        description  a build step names an artifact
+      variant 3 Argument
+        description  a command declares an argument, which is ignored
+      variant 4 Run
+        description  a command runs a module
+      variant 5 Watch
+        description  a command watches
+    error 6 Toolchain
+      description  A toolchain declares a child toolchain, which the milestone refuses
+      source src/core/fury.Lint.scala
+    error 7 Tool
+      description  A tool is not one the milestone knows, or is used as it does not support
+      source src/core/fury.Lint.scala
+      variant 1 Unknown
+        description  the tool is neither scalac nor javac
+      variant 2 Distributed
+        description  the tool is distributed through LIRA
+      variant 3 Edge
+        description  the tool declares an edge block
+      variant 4 Flag
+        description  the tool is given a flag, and none is known
+      variant 5 SideEffect
+        description  a setting affects only side effects, and is ignored
+      variant 6 Setting
+        description  a setting is not known
+    error 8 Project
+      description  A project declares a host, which the milestone ignores
+      source src/core/fury.Lint.scala
+    error 9 Module
+      description  A module uses what the milestone does not support, or ignores
+      source src/core/fury.Lint.scala
+      variant 1 Universe
+        description  the module targets a universe other than jvm
+      variant 2 Integration
+        description  the module declares an integration axis
+      variant 3 Option
+        description  the module declares an option axis
+      variant 4 Assemble
+        description  the module is assembled
+      variant 5 Artifact
+        description  the module declares an artifact
+      variant 6 Generate
+        description  the module generates code
+      variant 7 Presume
+        description  the module presumes something, which is ignored
+      variant 8 Guarantee
+        description  the module guarantees something, which is ignored
+      variant 9 Require
+        description  the module requires something, which is ignored
+      variant 10 Host
+        description  the module declares a host, which is ignored
+    error 10 Extraction
+      description  A command extracts into a path a source glob matches, a feedback loop
+      source src/core/fury.Lint.scala
+    error 11 BuildError
+      description  A valid build file does not say what the model needs
+      source src/core/fury.Model.scala
+      variant 1 Unnamed
+        description  a declaration needs a name
+      variant 2 Repeated
+        description  a field is repeated
+      variant 3 NotSingle
+        description  a field does not have exactly one value
+      variant 4 Missing
+        description  a field is missing
+      variant 5 Empty
+        description  a field has no value
+      variant 6 Selection
+        description  a selection is not `set <option> <case>`
+      variant 7 Setting
+        description  a setting is not `set <key> <value>`
+      variant 8 Extract
+        description  an extract does not have three values
+      variant 9 Host
+        description  a host is not `host [<domain>] <tag>`
+      variant 10 Presumption
+        description  a presumption does not have a kind and a name
+      variant 11 Artifact
+        description  an artifact is not `artifact <name> <app-type> [<filename>]`
+    error 12 SchemaError
+      description  A schema Fury ships cannot be read
+      source src/core/fury.Schemas.scala
+      variant 1 Absent
+        description  the schema is not among those shipped
+      variant 2 Malformed
+        description  the schema is not valid TEL, and the code carries the TEL error's
+    error 13 Rejection
+      description  A value is rejected by one of Fury's validators
+      source src/core/fury.Validators.scala
+      variant 1 ModuleRef
+        description  a module reference is not a name, <project>/<module> or <domain>/<name>
+      variant 2 Selector
+        description  a selector is neither a version prefix nor a tag name
+      variant 3 Glob
+        description  a glob is empty
+      variant 4 Form
+        description  a form is not a kebab-case name, optionally with a /<parameter>
+      variant 5 Path
+        description  a path is empty
+      variant 6 Address
+        description  an address is not a DNS name with an optional path prefix
+      variant 7 Kind
+        description  a presumption kind is not kebab-case
+      variant 8 ToolchainRef
+        description  a toolchain reference is not a /-separated path of kebab-case names
+      variant 9 AppType
+        description  an application type is not a kebab-case form
+      variant 10 Entry
+        description  an entry is not a kebab-case form
+      variant 11 DisciplineId
+        description  a discipline identifier is not <name>/<version>
+      variant 12 Effect
+        description  a setting's effect is neither `output` nor `nothing`
+
+  subdivision 34 launcher

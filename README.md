@@ -42,13 +42,14 @@ registry records what each normally is.
 | Letter | Project | Registry |
 | ------ | ------- | -------- |
 | `a` | LIRA | [`a.tel`](a.tel) |
-| `f` | Pyrocosm, and its tools | `f.tel` |
+| `c` | Consequent Style | [`c.tel`](c.tel) |
+| `f` | Pyrocosm, and its tools | [`f.tel`](f.tel) |
 | `p` | Proscala | [`p.tel`](p.tel) |
 | `s` | Soundness | [`s.tel`](s.tel) |
 | `t` | TEL | [`t.tel`](t.tel) |
 | `x` | XEK | [`x.tel`](x.tel) |
 
-Proscala's, TEL's and XEK's codes have been assigned so far.
+Every project's codes have been assigned.
 
 ### Compound codes
 
@@ -142,3 +143,17 @@ added later takes the next free number.
 Specification and its companions, which every implementation reports under the
 same codes (`↯/a.1.8` was L108), and the subdivisions after it are the modules
 of the `lira` implementation, in the order of their dependencies.
+
+`c.tel` records Consequent Style's: a subdivision for each of its principles, in
+the order the standard sets them out, an error for each rule, numbered within
+its principle, and a variant for each distinct failure of a rule (`↯/c.2.2.1`
+was `A2.1`). A checker reports a violation under a code of its own carrying the
+rule's: flare's is `↯/f.21.1/c.2.2.1`.
+
+`f.tel` records the codes of Pyrocosm and its tools, which share a letter: a
+subdivision for each module of Pyrocosm, numbered so that each follows those it
+depends on (`harness` 1 to `cli` 14), then the modules of fever (15–16), flame
+(17–20), flare (21–24), fuel (25–28), fume (29–32) and fury (33–34), each
+tool's in the order of its own modules' dependencies. Errors and the
+diagnostics a tool reports, a linter's findings and a document's faults alike,
+have codes.
