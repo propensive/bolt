@@ -154,6 +154,9 @@ rule's: flare's is `↯/f.21.1/c.2.2.1`.
 subdivision for each module of Pyrocosm, numbered so that each follows those it
 depends on (`harness` 1 to `cli` 14), then the modules of fever (15–16), flame
 (17–20), flare (21–24), fuel (25–28), fume (29–32) and fury (33–34), each
-tool's in the order of its own modules' dependencies. Errors and the
+tool's in the order of its own modules' dependencies. A subdivision added
+later takes the next number: fury's lint findings, first numbered `33.2` to
+`33.10` among its core module's errors, moved to a subdivision of their own,
+`35`, and their old numbers are retired. Errors and the
 diagnostics a tool reports, a linter's findings and a document's faults alike,
 have codes.

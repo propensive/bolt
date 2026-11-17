@@ -824,75 +824,24 @@ project f pyrocosm
     error 1 NoBuildFile
       description  No build file is found at or above the working directory
       source src/core/fury.Check.scala
-    error 2 RegistryLayer
-      description  A build file declares a registry layer, which the milestone refuses
-      source src/core/fury.Lint.scala
-    error 3 Repository
-      description  A build file declares a repository, which the milestone ignores
-      source src/core/fury.Lint.scala
-    error 4 Topology
-      description  A build file declares a topology, which the milestone ignores
-      source src/core/fury.Lint.scala
-    error 5 Command
-      description  A command uses what the milestone does not support
-      source src/core/fury.Lint.scala
-      variant 1 Selection
-        description  a build step makes a selection
-      variant 2 Artifact
-        description  a build step names an artifact
-      variant 3 Argument
-        description  a command declares an argument, which is ignored
-      variant 4 Run
-        description  a command runs a module
-      variant 5 Watch
-        description  a command watches
-    error 6 Toolchain
-      description  A toolchain declares a child toolchain, which the milestone refuses
-      source src/core/fury.Lint.scala
-    error 7 Tool
-      description  A tool is not one the milestone knows, or is used as it does not support
-      source src/core/fury.Lint.scala
-      variant 1 Unknown
-        description  the tool is neither scalac nor javac
-      variant 2 Distributed
-        description  the tool is distributed through LIRA
-      variant 3 Edge
-        description  the tool declares an edge block
-      variant 4 Flag
-        description  the tool is given a flag, and none is known
-      variant 5 SideEffect
-        description  a setting affects only side effects, and is ignored
-      variant 6 Setting
-        description  a setting is not known
-    error 8 Project
-      description  A project declares a host, which the milestone ignores
-      source src/core/fury.Lint.scala
-    error 9 Module
-      description  A module uses what the milestone does not support, or ignores
-      source src/core/fury.Lint.scala
-      variant 1 Universe
-        description  the module targets a universe other than jvm
-      variant 2 Integration
-        description  the module declares an integration axis
-      variant 3 Option
-        description  the module declares an option axis
-      variant 4 Assemble
-        description  the module is assembled
-      variant 5 Artifact
-        description  the module declares an artifact
-      variant 6 Generate
-        description  the module generates code
-      variant 7 Presume
-        description  the module presumes something, which is ignored
-      variant 8 Guarantee
-        description  the module guarantees something, which is ignored
-      variant 9 Require
-        description  the module requires something, which is ignored
-      variant 10 Host
-        description  the module declares a host, which is ignored
-    error 10 Extraction
-      description  A command extracts into a path a source glob matches, a feedback loop
-      source src/core/fury.Lint.scala
+    error 2 RegistryLayer retired
+      description  Moved to ↯/f.35.1: a build file declares a registry layer, which the milestone refuses
+    error 3 Repository retired
+      description  Moved to ↯/f.35.2: a build file declares a repository, which the milestone ignores
+    error 4 Topology retired
+      description  Moved to ↯/f.35.3: a build file declares a topology, which the milestone ignores
+    error 5 Command retired
+      description  Moved to ↯/f.35.4: a command uses what the milestone does not support
+    error 6 Toolchain retired
+      description  Moved to ↯/f.35.5: a toolchain declares a child toolchain, which the milestone refuses
+    error 7 Tool retired
+      description  Moved to ↯/f.35.6: a tool is not one the milestone knows, or is used as it does not support
+    error 8 Project retired
+      description  Moved to ↯/f.35.7: a project declares a host, which the milestone ignores
+    error 9 Module retired
+      description  Moved to ↯/f.35.8: a module uses what the milestone does not support, or ignores
+    error 10 Extraction retired
+      description  Moved to ↯/f.35.9: a command extracts into a path a source glob matches, a feedback loop
     error 11 BuildError
       description  A valid build file does not say what the model needs
       source src/core/fury.Model.scala
@@ -954,3 +903,74 @@ project f pyrocosm
         description  a setting's effect is neither `output` nor `nothing`
 
   subdivision 34 launcher
+
+  subdivision 35 lint
+    error 1 RegistryLayer
+      description  A build file declares a registry layer, which the milestone refuses
+      source src/core/fury.Lint.scala
+    error 2 Repository
+      description  A build file declares a repository, which the milestone ignores
+      source src/core/fury.Lint.scala
+    error 3 Topology
+      description  A build file declares a topology, which the milestone ignores
+      source src/core/fury.Lint.scala
+    error 4 Command
+      description  A command uses what the milestone does not support
+      source src/core/fury.Lint.scala
+      variant 1 Selection
+        description  a build step makes a selection
+      variant 2 Artifact
+        description  a build step names an artifact
+      variant 3 Argument
+        description  a command declares an argument, which is ignored
+      variant 4 Run
+        description  a command runs a module
+      variant 5 Watch
+        description  a command watches
+    error 5 Toolchain
+      description  A toolchain declares a child toolchain, which the milestone refuses
+      source src/core/fury.Lint.scala
+    error 6 Tool
+      description  A tool is not one the milestone knows, or is used as it does not support
+      source src/core/fury.Lint.scala
+      variant 1 Unknown
+        description  the tool is neither scalac nor javac
+      variant 2 Distributed
+        description  the tool is distributed through LIRA
+      variant 3 Edge
+        description  the tool declares an edge block
+      variant 4 Flag
+        description  the tool is given a flag, and none is known
+      variant 5 SideEffect
+        description  a setting affects only side effects, and is ignored
+      variant 6 Setting
+        description  a setting is not known
+    error 7 Project
+      description  A project declares a host, which the milestone ignores
+      source src/core/fury.Lint.scala
+    error 8 Module
+      description  A module uses what the milestone does not support, or ignores
+      source src/core/fury.Lint.scala
+      variant 1 Universe
+        description  the module targets a universe other than jvm
+      variant 2 Integration
+        description  the module declares an integration axis
+      variant 3 Option
+        description  the module declares an option axis
+      variant 4 Assemble
+        description  the module is assembled
+      variant 5 Artifact
+        description  the module declares an artifact
+      variant 6 Generate
+        description  the module generates code
+      variant 7 Presume
+        description  the module presumes something, which is ignored
+      variant 8 Guarantee
+        description  the module guarantees something, which is ignored
+      variant 9 Require
+        description  the module requires something, which is ignored
+      variant 10 Host
+        description  the module declares a host, which is ignored
+    error 9 Extraction
+      description  A command extracts into a path a source glob matches, a feedback loop
+      source src/core/fury.Lint.scala
