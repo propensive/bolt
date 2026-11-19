@@ -265,6 +265,15 @@ project x xek
         site 66
           description  the key is neither the record's release key nor its recovery key; give --foreign-key if that is intended, as for the release which follows a rotation
           source src/core/xek.Signer.scala
+        site 67
+          description  --shrink cannot be combined with --dispatch, which has no JAR
+          source src/core/xek.Build.scala
+        site 68
+          description  --keep applies only when the JAR is shrunk (--shrink)
+          source src/core/xek.Build.scala
+        site 69
+          description  there is no temporary directory to shrink {} in
+          source src/core/xek.Shrinker.scala
       variant 2 Format
         description  a file is not in the form expected
         site 1
@@ -312,6 +321,12 @@ project x xek
         site 15
           description  a seed is {} bytes, but this one is {}
           source src/core/xek.Signer.scala
+        site 16
+          description  {} could not be shrunk: {}
+          source src/core/xek.Shrinker.scala
+        site 17
+          description  the Main-Class of {}, {}, is not the name of a class
+          source src/core/xek.Shrinker.scala
       variant 3 Download
         description  a download failed
         site 1
