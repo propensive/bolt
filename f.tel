@@ -369,7 +369,7 @@ project f pyrocosm
       variant 1 Schema
         description  the glossary schema finds a fault; carries the code of the TEL error
       variant 2 Term
-        description  a glossary which is not a translation gives a name a `term`
+        description  a glossary as it was written gives a name a `term`, which only a glossary in another language says
       variant 3 Unnameable
         description  a term's name holds a bracket, so it cannot be a term
       variant 4 Duplicate
@@ -380,9 +380,8 @@ project f pyrocosm
         description  a synonym holds a bracket, so it cannot be a name
       variant 7 DuplicateSynonym
         description  a synonym is a name already
-    error 5 Mirror
-      description  A translation of a document differs in structure from the text it translates
-      source src/core/fuel.Mirror.scala
+    error 5 Mirror retired
+      description  Retired in Fuel 0.9.0, which reads translations from an Orthant store: a translation of a document differs in structure from the text it translates
       variant 1 Citations
         description  a paragraph or heading does not name the code, or lead to the places, the one it translates does
       variant 2 Items
@@ -407,14 +406,14 @@ project f pyrocosm
       variant 3 EmptySlide
         description  a slide is empty
     error 7 SectionFile
-      description  A section's file, or a translation of one, is not as it should be
+      description  A section's file, in the language it was written in or another, is not as it should be
       source src/core/fuel.SectionFile.scala
       variant 1 Schema
         description  the section file's schema finds a fault; carries the code of the TEL error
-      variant 2 Untitled
-        description  a translation lacks the title of the file it translates
-      variant 3 Orphaned
-        description  a translation has a title the file it translates no longer has
+      variant 2 Untitled retired
+        description  Retired in Fuel 0.9.0: a translation lacks the title of the file it translates
+      variant 3 Orphaned retired
+        description  Retired in Fuel 0.9.0: a translation has a title the file it translates no longer has
     error 8 Table
       description  A `tabular` fence is not a table
       source src/core/fuel.Tables.scala
@@ -428,9 +427,8 @@ project f pyrocosm
         description  the table has no `column`
       variant 5 NoRow
         description  the table has no `row`
-    error 9 Translation
-      description  A translation of a document is not of the text it translates as it stands
-      source src/core/fuel.Translation.scala
+    error 9 Translation retired
+      description  Retired in Fuel 0.9.0, which reads translations from an Orthant store: a translation of a document is not of the text it translates as it stands
       variant 1 Gained
         description  the text it translates has gained lines which are not translated
       variant 2 Lost
@@ -447,7 +445,6 @@ project f pyrocosm
         description  a passage is not translated
       variant 8 Absent
         description  a file has no translation into a language it is translated into
-        source src/core/fuel.Translations.scala
     error 10 Sample
       description  A fence's `path` cannot be written as a sample file
       source src/core/fuel_core.scala
@@ -503,22 +500,35 @@ project f pyrocosm
         description  the compiler reports on the fragment; carries the compiler's code, where it has one
       variant 5 NoError
         description  a fragment marked `errors show` compiles
+    error 15 Depot
+      description  The Orthant store which holds the documents cannot be read as the configuration asks
+      source src/core/fuel.Depot.scala
+      variant 1 Unopened
+        description  the store cannot be opened; carries Orthant's code, where it has one
+      variant 2 At
+        description  an `at` names no value of an axis of the store; carries Orthant's code
+      variant 3 Branching
+        description  an axis is not one line of values, and no `at` names a value of it
+      variant 4 Language
+        description  a value of the axis of languages is not a language
+      variant 5 Underivable
+        description  a document cannot be derived at the point it is read at; carries Orthant's code
   subdivision 26 api
     error 1 GlossaryTranslation
-      description  A translation of a glossary is not as it should be
+      description  A glossary as another language reads it is not as it should be
       source src/api/fuel.GlossaryTranslations.scala
-      variant 1 NoEntry
-        description  the translation has no entry for a term
+      variant 1 NoEntry retired
+        description  Retired in Fuel 0.9.0: the translation has no entry for a term
       variant 2 UnknownTerm
-        description  the glossary it translates has no term an entry is for
+        description  the glossary as it was written has no term an entry is for
       variant 3 Duplicate
         description  a term has an entry already
-      variant 4 Gone
-        description  the definition an entry translates has gone
-      variant 5 Untranslated
-        description  an entry lacks the translation of a definition
-      variant 6 Unnamed
-        description  an entry gives no `term`, the term's name in its language
+      variant 4 Gone retired
+        description  Retired in Fuel 0.9.0: the definition an entry translates has gone
+      variant 5 Untranslated retired
+        description  Retired in Fuel 0.9.0: an entry lacks the translation of a definition
+      variant 6 Unnamed retired
+        description  Retired in Fuel 0.9.0: an entry gives no `term`, the term's name in its language
       variant 7 Unnameable
         description  a `term` holds a bracket, so it cannot be a term
       variant 8 Homonym
@@ -593,9 +603,8 @@ project f pyrocosm
       variant 14 Format
         description  the overlay's `format` is not one an overlay documents
         source src/client/fuel_client.scala
-    error 5 OverlayTranslation
-      description  A translation of an overlay is not as it should be
-      source src/api/fuel.OverlayTranslations.scala
+    error 5 OverlayTranslation retired
+      description  Retired in Fuel 0.9.0, which reads translations from an Orthant store: a translation of an overlay is not as it should be
       variant 1 Untranslated
         description  the translation lacks prose of the overlay, which is not translated
       variant 2 Gone
@@ -645,9 +654,8 @@ project f pyrocosm
       variant 8 Unplaced
         description  the alignment has none of the words of a slide's transcript
         source src/client/fuel.ForcedAlignment.scala
-    error 2 Translating
-      description  `fuel translate` cannot do what it is asked
-      source src/client/fuel.Translating.scala
+    error 2 Translating retired
+      description  Retired in Fuel 0.9.0, which has no `fuel translate`: `fuel translate` cannot do what it is asked
       variant 1 Stray
         description  a file in a directory of translations translates nothing
       variant 2 Translation
@@ -666,21 +674,21 @@ project f pyrocosm
       description  The configuration's sections are not as they should be
       source src/client/fuel.Workspace.scala
       variant 1 Schema
-        description  the configuration's schema finds a fault in a section; carries the code of the TEL error
+        description  the configuration's schema finds a fault in a section or in the store; carries the code of the TEL error
       variant 2 Name
         description  a section's name holds `/` or `#`
       variant 3 Language
-        description  a section's original is in what is not a language
-      variant 4 Translation
-        description  a translation is not into a language, or falls back to what is not one
-      variant 5 Fallback
-        description  a translation falls back to a language the section is neither written nor translated in
-      variant 6 Own
-        description  a translation is into the language the section is written in
-      variant 7 Directory
-        description  a translation is in the directory of the text it translates
+        description  a section is written in what is not a language
+      variant 4 Translation retired
+        description  Retired in Fuel 0.9.0: a translation is not into a language, or falls back to what is not one
+      variant 5 Fallback retired
+        description  Retired in Fuel 0.9.0: a translation falls back to a language the section is neither written nor translated in
+      variant 6 Own retired
+        description  Retired in Fuel 0.9.0: a translation is into the language the section is written in
+      variant 7 Directory retired
+        description  Retired in Fuel 0.9.0: a translation is in the directory of the text it translates
       variant 8 Loose
-        description  a `translation` or `original` is not beneath a `section`
+        description  a `translation` or an `original`, which no longer say a section's languages, is at the top of the configuration
       variant 9 Document
         description  a `document` configures what is now a section
       variant 10 Shared
@@ -696,10 +704,10 @@ project f pyrocosm
       source src/client/fuel_client.scala
       variant 1 Present
         description  `fuel present` is given no file
-      variant 2 DryRun
-        description  `fuel translate` is given `--dry-run` without `--update`
-      variant 3 Language
-        description  `fuel translate` is given a language which is not one
+      variant 2 DryRun retired
+        description  Retired in Fuel 0.9.0: `fuel translate` is given `--dry-run` without `--update`
+      variant 3 Language retired
+        description  Retired in Fuel 0.9.0: `fuel translate` is given a language which is not one
       variant 4 Sync
         description  `fuel sync github` is given no repository
       variant 5 Unattached
