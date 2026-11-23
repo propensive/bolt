@@ -1,21 +1,23 @@
 tel 1.0 specification.tel/tels:2.1.0
 
-# The schema of a bolt-code registry: the record of what each bolt code, such
-# as `↯/p.1.7` or `↯/s.87.1/t.1.4`, means.
+# The schema of a project's record of its bolt codes: what each code, such as
+# `↯/p.1.7` or `↯/s.87.2.1`, means, and what is to be done about it.
 #
-# A registry lists, for a project, the numbers of a code in the order they
-# are written: `project p` / `subdivision 1` / `error 7` is `↯/p.1.7`, and a
-# `variant` or a `site` beneath the error gives the code its third and fourth
-# numbers.
+# Each project keeps this record in its own repository; `projects.tel`, in the
+# bolt repository, says where. The record lists the numbers of a code in the
+# order they are written: `project p` / `subdivision 1` / `error 7` is
+# `↯/p.1.7`, and a `variant` or a `site` beneath the error gives the code its
+# third and fourth numbers.
 #
-# Every level is written the same way: its number, then optionally its name,
-# then optionally `retired`:
+# Every level is written the same way: its number, then its name, then
+# optionally `retired`:
 #
-#     error 7 TypeMismatch
-#     error 10 TopLevelImplicitClass retired
+#     error 7 type-mismatch
+#     error 10 top-level-implicit-class retired
 #
-# A number without a name which is retired has `retired` as a child, since
-# an atom after the number is its name.
+# The names spell the code's long form: `↯/proscala.standard.type-mismatch`.
+# A level which has not been named yet has its number alone; if it is retired,
+# `retired` is its child, since an atom after the number is its name.
 
 name bolt
 
@@ -35,12 +37,67 @@ scalar Number
 
 scalar Name
   description
-      The name a project knows a subdivision, error, variant or site by, without spaces.
-  pattern [^\s]+
+      The standard name of a project, subdivision, error, variant or site: lower-case words of letters and digits, each beginning with a letter, joined by hyphens. It is written in camel case or Pascal case where a language prefers them.
+  pattern [a-z][a-z0-9]*(-[a-z][a-z0-9]*)*
+
+scalar Code
+  description
+      A bolt code, in its short or its long form, with or without the `↯` before it.
+  pattern ↯?(/[a-z][a-z0-9-]*(\.[a-z0-9][a-z0-9-]*)+)+
+
+scalar Markdown
+  description
+      Prose in CommonMark. It is written as a source atom, or as a literal atom where it needs trailing spaces, or a blank line at its start or end.
+
+scalar Severity
+  description
+      Whether a diagnostic is normally an error or a warning.
+  pattern error|warning
+
+scalar Phase
+  description
+      Whether a diagnostic is normally reported when a program is compiled or when it runs.
+  pattern compiletime|runtime
+
+# ---------------------------------------------------------------------------
+# Documentation
+# ---------------------------------------------------------------------------
+
+record Example
+  description
+      A message as it is reported, with the code before it.
+  field message String
+  field note Markdown optional
+
+record Section
+  description
+      Anything else worth saying about an error, under a title of its own.
+  field title String key
+  field body Markdown
 
 # ---------------------------------------------------------------------------
 # The levels of a code
 # ---------------------------------------------------------------------------
+
+# Every level has `number`, `name` and `retired`, in that order, and then:
+#
+#   alias       a name it had before; never given to another of its siblings
+#   symbol      what the project's source calls it, where that is not the name
+#               in another case (`Query.Error` for `query`, `OAuth` for `oauth`)
+#   summary     what it is, in a line
+#   source      where it is defined or reported from
+#
+# and, on an error, a variant or a site, its documentation:
+#
+#   conditions  when it is reported
+#   mitigation  what to do about it
+#   example     a message as it is reported
+#   related     a code worth reading about beside it
+#   section     anything else, under a title
+#   successor   for one which is retired, a code which replaced it
+#   retirement  for one which is retired, what became of it
+#   severity    error or warning, as it normally is
+#   phase       compiletime or runtime, as it normally is
 
 # The fourth number of a code, or the third for an error without variants.
 
@@ -50,8 +107,19 @@ record Site
   field number Number key
   field name Name optional
   field retired Flag optional
-  field description String optional
-  field source String optional
+  field alias Name optional repeatable
+  field symbol String optional
+  field summary String optional
+  field source String optional repeatable
+  field conditions Markdown optional
+  field mitigation Markdown optional
+  field example Example optional repeatable
+  field related Code optional repeatable
+  field section Section optional repeatable
+  field successor Code optional repeatable
+  field retirement Markdown optional
+  field severity Severity optional
+  field phase Phase optional
 
 # The third number of a code. An error has variants or sites, not both: a
 # site of an error which has variants belongs to one of them.
@@ -62,8 +130,19 @@ record Variant
   field number Number key
   field name Name optional
   field retired Flag optional
-  field description String optional
-  field source String optional
+  field alias Name optional repeatable
+  field symbol String optional
+  field summary String optional
+  field source String optional repeatable
+  field conditions Markdown optional
+  field mitigation Markdown optional
+  field example Example optional repeatable
+  field related Code optional repeatable
+  field section Section optional repeatable
+  field successor Code optional repeatable
+  field retirement Markdown optional
+  field severity Severity optional
+  field phase Phase optional
   field site Site optional repeatable
 
 # The second number of a code. `template` and `text` are how a project's
@@ -76,8 +155,19 @@ record Error
   field number Number key
   field name Name optional
   field retired Flag optional
-  field description String optional
-  field source String optional
+  field alias Name optional repeatable
+  field symbol String optional
+  field summary String optional
+  field source String optional repeatable
+  field conditions Markdown optional
+  field mitigation Markdown optional
+  field example Example optional repeatable
+  field related Code optional repeatable
+  field section Section optional repeatable
+  field successor Code optional repeatable
+  field retirement Markdown optional
+  field severity Severity optional
+  field phase Phase optional
   field template String optional repeatable
       description
           The constant parts of the interpolated string which makes the error's message, joined by `{}`.
@@ -96,19 +186,26 @@ record Subdivision
   field number Number key
   field name Name optional
   field retired Flag optional
-  field description String optional
+  field alias Name optional repeatable
+  field symbol String optional
+  field summary String optional
+  field source String optional repeatable
+  field section Section optional repeatable
   field error Error optional repeatable
+
+# A project's record may be one document or several, each with some of its
+# subdivisions.
 
 record Project
   description
       A project, and the codes which begin with its letter.
   field letter Letter key
-  field name Identifier
-  field description String optional
+  field name Name
+  field summary String optional
   field subdivision Subdivision optional repeatable
 
 # ---------------------------------------------------------------------------
-# Registry document root
+# Document root
 # ---------------------------------------------------------------------------
 
 document
