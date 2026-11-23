@@ -28,8 +28,7 @@ project p proscala
 
 project s soundness
   repository  https://github.com/propensive/soundness
-  path doc/work/errors/bolt.tel
-  note  The record is in the Orthant store of Soundness's documentation: `orthant checkout en main` writes it to this path.
+  path doc/errors/bolt.tel
 
 project t tel
   repository  https://github.com/propensive/tel
