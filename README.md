@@ -48,7 +48,7 @@ record says what each normally is.
 | `f` | `pyrocosm` | Pyrocosm, and its tools | [`bolt.tel`](https://github.com/propensive/pyrocosm/blob/main/bolt.tel) in `propensive/pyrocosm` |
 | `o` | `orthant` | Orthant | [`bolt.tel`](https://github.com/propensive/orthant/blob/main/bolt.tel) in `propensive/orthant` |
 | `p` | `proscala` | Proscala | [`mk/bolt-codes.tel`](https://github.com/propensive/proscala/blob/main/mk/bolt-codes.tel) in `propensive/proscala` |
-| `s` | `soundness` | Soundness | `doc/work/errors/bolt.tel` in `propensive/soundness`, in the Orthant store of its documentation |
+| `s` | `soundness` | Soundness | [`doc/errors/bolt.tel`](https://github.com/propensive/soundness/blob/main/doc/errors/bolt.tel) in `propensive/soundness` |
 | `t` | `tel` | TEL | [`spec/bolt.tel`](https://github.com/propensive/tel/blob/main/spec/bolt.tel) in `propensive/tel` |
 | `x` | `xek` | XEK | [`bolt.tel`](https://github.com/propensive/xek/blob/main/bolt.tel) in `propensive/xek` |
 
