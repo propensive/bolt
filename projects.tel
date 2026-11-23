@@ -1,0 +1,40 @@
+tel 1.0 propensive.dev/bolt-index
+
+# The projects which have bolt codes: the letter and the name each is known by
+# in a code, and where it keeps the record of its codes, a document of the
+# schema `bolt`. A letter, once assigned, is permanent.
+
+project a lira
+  repository  https://github.com/propensive/lira
+  path bolt.tel
+
+project c consequent-style
+  summary  Consequent Style, the layout standard for Scala which flare checks
+  repository  https://github.com/propensive/flare
+  path doc/rules/bolt.tel
+
+project f pyrocosm
+  summary  Pyrocosm, the framework of Propensive's tools, and the tools built on it: fever, flame, flare, fuel, fume and fury
+  repository  https://github.com/propensive/pyrocosm
+  path bolt.tel
+
+project o orthant
+  repository  https://github.com/propensive/orthant
+  path bolt.tel
+
+project p proscala
+  repository  https://github.com/propensive/proscala
+  path mk/bolt-codes.tel
+
+project s soundness
+  repository  https://github.com/propensive/soundness
+  path doc/work/errors/bolt.tel
+  note  The record is in the Orthant store of Soundness's documentation: `orthant checkout en main` writes it to this path.
+
+project t tel
+  repository  https://github.com/propensive/tel
+  path spec/bolt.tel
+
+project x xek
+  repository  https://github.com/propensive/xek
+  path bolt.tel

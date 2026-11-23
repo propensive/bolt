@@ -1,0 +1,44 @@
+tel 1.0 specification.tel/tels:2.1.0
+
+# The schema of `projects.tel`: the index of the projects which have bolt
+# codes, the letter and the name each is known by, and where each keeps the
+# record of its codes.
+#
+#     project p proscala
+#       repository  https://github.com/propensive/proscala
+#       path mk/bolt-codes.tel
+#
+# The record itself is a document of the schema `bolt`, in the project's own
+# repository.
+
+name bolt-index
+
+scalar Letter
+  description
+      The letter by which a project is known in a bolt code's short form.
+  pattern [a-z]
+
+scalar Name
+  description
+      The name by which a project is known in a bolt code's long form: at least two characters, so that it is not mistaken for a letter.
+  pattern [a-z][a-z0-9]+(-[a-z][a-z0-9]*)*
+
+record Project
+  description
+      A project, and where the record of its codes is kept.
+  field letter Letter key
+  field name Name
+  field retired Flag optional
+  field summary String optional
+  field repository String
+      description
+          The URL of the repository which holds the record.
+  field path String
+      description
+          The path in the repository's default branch of the record: a document of the schema `bolt`, or a directory of them.
+  field note String optional
+      description
+          What is needed to read the record, where it is not a plain file in the repository.
+
+document
+  field project Project repeatable
